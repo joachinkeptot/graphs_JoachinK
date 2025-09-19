@@ -94,3 +94,74 @@ def print_shortest_paths(distances, paths, source):
             print(f"  To {vertex}: No path exists")
         else:
             print(f"  To {vertex}: distance = {distances[vertex]}, path = {' -> '.join(map(str, paths[vertex]))}")
+
+
+def bfs_shortest_path(graph, source, target=None):
+    """
+    Find shortest paths in an unweighted graph using Breadth-First Search.
+    
+    Args:
+        graph (dict): Dictionary representation of unweighted graph
+        source: Starting vertex
+        target: Optional target vertex. If None, finds paths to all vertices
+    
+    Returns:
+        tuple: (distances, paths) where:
+            - distances (dict): shortest distance (number of edges) from source
+            - paths (dict): shortest path from source to each vertex
+    """
+    from collections import deque
+    
+    # Initialize
+    distances = {source: 0}
+    paths = {source: [source]}
+    visited = {source}
+    queue = deque([source])
+    
+    while queue:
+        current = queue.popleft()
+        
+        # If we're looking for a specific target and found it, we can stop
+        if target and current == target:
+            break
+            
+        # Explore neighbors
+        if current in graph:
+            for neighbor in graph[current]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    distances[neighbor] = distances[current] + 1
+                    paths[neighbor] = paths[current] + [neighbor]
+                    queue.append(neighbor)
+    
+    return distances, paths
+
+def is_connected(graph):
+    """
+    Check if an undirected graph is connected (all vertices reachable from any vertex).
+    
+    Args:
+        graph (dict): Dictionary representation of undirected graph
+    
+    Returns:
+        bool: True if graph is connected, False otherwise
+    """
+    if not graph:
+        return True
+    
+    # Get all vertices
+    all_vertices = set()
+    for vertex in graph:
+        all_vertices.add(vertex)
+        for neighbor in graph[vertex]:
+            all_vertices.add(neighbor)
+    
+    if not all_vertices:
+        return True
+    
+    # Run BFS from first vertex
+    start_vertex = next(iter(all_vertices))
+    distances, _ = bfs_shortest_path(graph, start_vertex)
+    
+    # Check if all vertices were reached
+    return len(distances) == len(all_vertices)

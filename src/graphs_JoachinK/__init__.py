@@ -1,3 +1,4 @@
+
 """
 graphs_JoachinK - A Python library for graph algorithms
 
@@ -13,6 +14,6 @@ from . import sp
 from . import heapq
 
 # Make key functions available at package level
-from .sp import dijkstra, print_shortest_paths
+from .sp import dijkstra, print_shortest_paths, bfs_shortest_path, is_connected
 
-__all__ = ['sp', 'heapq', 'dijkstra', 'print_shortest_paths']
+__all__ = ['sp', 'heapq', 'dijkstra', 'print_shortest_paths', 'bfs_shortest_path', 'is_connected']
