@@ -86,7 +86,7 @@ def test_dijkstra_assignment_example():
     assert distances[1] == 4
     assert distances[7] == 8
     assert distances[6] == 9  # 0 -> 7 -> 6 = 8 + 1 = 9
-    assert distances[8] == 14  # Better path found: likely 0 -> 7 -> 6 -> 8 = 8 + 1 + 6 = 15, or another route
+    assert distances[8] == 14  # Better path found by algorithm
     
     print("✓ Assignment example test passed!")
 
@@ -147,6 +147,68 @@ def test_disconnected_graph():
     
     print("✓ Disconnected graph test passed!")
 
+def test_bfs():
+    """Test BFS shortest path algorithm."""
+    print("Testing BFS shortest path...")
+    
+    # Create unweighted graph: 0-1-2-3, 0-4
+    graph = {
+        0: [1, 4],
+        1: [0, 2],
+        2: [1, 3],
+        3: [2],
+        4: [0]
+    }
+    
+    distances, paths = sp.bfs_shortest_path(graph, 0)
+    
+    # Check distances (number of edges)
+    assert distances[0] == 0
+    assert distances[1] == 1  # 0 -> 1
+    assert distances[2] == 2  # 0 -> 1 -> 2
+    assert distances[3] == 3  # 0 -> 1 -> 2 -> 3
+    assert distances[4] == 1  # 0 -> 4
+    
+    # Check paths
+    assert paths[0] == [0]
+    assert paths[1] == [0, 1]
+    assert paths[2] == [0, 1, 2]
+    assert paths[3] == [0, 1, 2, 3]
+    assert paths[4] == [0, 4]
+    
+    print("✓ BFS tests passed!")
+
+def test_graph_connectivity():
+    """Test graph connectivity checker."""
+    print("Testing graph connectivity...")
+    
+    # Connected graph
+    connected_graph = {
+        0: [1, 2],
+        1: [0, 2],
+        2: [0, 1]
+    }
+    assert sp.is_connected(connected_graph) == True
+    
+    # Disconnected graph
+    disconnected_graph = {
+        0: [1],
+        1: [0],
+        2: [3],
+        3: [2]
+    }
+    assert sp.is_connected(disconnected_graph) == False
+    
+    # Single vertex
+    single_vertex = {0: []}
+    assert sp.is_connected(single_vertex) == True
+    
+    # Empty graph
+    empty_graph = {}
+    assert sp.is_connected(empty_graph) == True
+    
+    print("✓ Graph connectivity tests passed!")
+
 if __name__ == '__main__':
     print("Running tests for graphs_JoachinK package...\n")
     
@@ -156,8 +218,11 @@ if __name__ == '__main__':
         test_dijkstra_assignment_example()
         test_file_format()
         test_disconnected_graph()
+        test_bfs()
+        test_graph_connectivity()
         
         print("\n🎉 All tests passed! Your implementation is working correctly.")
+        print("📈 Bonus algorithms (BFS + connectivity) implemented successfully!")
         
     except AssertionError as e:
         print(f"\n❌ Test failed: {e}")
